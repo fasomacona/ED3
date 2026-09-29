@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica · Tema 3 | Estructura de Datos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">ED</span>
+        Estructura de Datos
+      </a>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="pilas.html">3.1 Pilas</a>
+        <a href="colas.html">3.2 Colas</a>
+        <a href="listas.html">3.3 Listas</a>
+        <a href="practica.html" class="active">Práctica</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 2rem;">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a> › Parte práctica (Jupyter Notebook)
+    </div>
+
+    <h1 class="section-title"><span class="num">💻</span> Parte práctica — Jupyter Notebook</h1>
+
+    <div class="card">
+      <p>
+        Ejercicios alineados con el Tema 3 (pilas, colas y listas) y con las prácticas
+        sugeridas en el programa de la asignatura. Compatible con Jupyter, Colab y VS Code.
+      </p>
+    </div>
+
+    <section class="section">
+      <h2 class="section-title"><span class="num">1</span> Cómo usar el notebook</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Local</h3>
+          <pre style="margin:0.5rem 0"><code>pip install jupyter
+jupyter notebook notebooks/practica_tema3.ipynb</code></pre>
+        </div>
+        <div class="card">
+          <h3>Google Colab</h3>
+          <p>Sube <code>practica_tema3.ipynb</code> y ábrelo con Colaboratory.</p>
+        </div>
+      </div>
+      <p style="margin-top: 1rem;">
+        <a href="notebooks/practica_tema3.ipynb" class="btn btn-primary" download>⬇️ Descargar practica_tema3.ipynb</a>
+      </p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="num">2</span> Contenido del notebook</h2>
+
+      <div class="card">
+        <h3>Ejercicio 1 — Pila estática y dinámica</h3>
+        <p>Implementar pila con arreglo de capacidad fija y con lista dinámica; comparar comportamiento al llenarse.</p>
+      </div>
+      <div class="card">
+        <h3>Ejercicio 2 — Aplicaciones de pila</h3>
+        <p>Historial de navegador (atrás) y verificación de paréntesis balanceados.</p>
+      </div>
+      <div class="card">
+        <h3>Ejercicio 3 — Cola y cola circular</h3>
+        <p>Implementar cola con deque y cola circular con arreglo; simular lista de espera de un restaurante.</p>
+      </div>
+      <div class="card">
+        <h3>Ejercicio 4 — Cola de prioridad</h3>
+        <p>Simular salida de aviones en un aeropuerto según prioridad.</p>
+      </div>
+      <div class="card">
+        <h3>Ejercicio 5 — Lista simplemente enlazada</h3>
+        <p>Implementar inserción, eliminación, búsqueda y recorrido; comparar con lista de Python.</p>
+      </div>
+      <div class="card">
+        <h3>Ejercicio 6 — Reto integrador</h3>
+        <p>Elegir la estructura adecuada (pila, cola o lista) para un problema descrito y justificar la decisión con complejidades.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="num">3</span> Criterios de evaluación sugeridos</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Criterio</th><th>Peso</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Correctitud de operaciones (push/pop, enqueue/dequeue, insertar/eliminar)</td><td>40 %</td></tr>
+            <tr><td>Aplicaciones funcionales (navegador, restaurante, aeropuerto)</td><td>25 %</td></tr>
+            <tr><td>Análisis de complejidad y justificación de diseño</td><td>20 %</td></tr>
+            <tr><td>Claridad, pruebas con assert y estilo</td><td>15 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><span class="num">4</span> Prácticas del programa de la asignatura</h2>
+      <div class="card">
+        <ul>
+          <li>Simular lista de espera para asignación de mesas en un restaurante.</li>
+          <li>Simular llamadas a funciones utilizando una pila.</li>
+          <li>Simular el almacenamiento de páginas visitadas en un navegador (pilas).</li>
+          <li>Simular la salida de aviones en un aeropuerto con colas de prioridad.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="btn-group">
+      <a href="listas.html" class="btn btn-outline">← 3.3 Listas</a>
+      <a href="index.html" class="btn btn-primary">Volver al inicio</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div><strong>Estructura de Datos (AED-1026)</strong> · Práctica Tema 3</div>
+      <div>Material didáctico abierto</div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.2 Colas | Tema 3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">ED</span>
+        Estructura de Datos
+      </a>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="pilas.html">3.1 Pilas</a>
+        <a href="colas.html" class="active">3.2 Colas</a>
+        <a href="listas.html">3.3 Listas</a>
+        <a href="practica.html">Práctica</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 2rem;">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a> › 3.2 Colas
+    </div>
+
+    <h1 class="section-title"><span class="num">3.2</span> Colas (Queues)</h1>
+
+    <div class="card">
+      <p>
+        Una <strong>cola</strong> es una estructura lineal con disciplina <strong>FIFO</strong>
+        (First In, First Out): el primer elemento en entrar es el primero en salir.
+        Se inserta por el <strong>final</strong> (rear) y se elimina por el <strong>frente</strong> (front).
+      </p>
+      <div class="diagram" style="margin-top: 1rem;">
+        frente → [ A ] [ B ] [ C ] [ D ] ← final<br>
+        <span style="opacity:0.6">dequeue quita A · enqueue agrega después de D</span>
+      </div>
+    </div>
+
+    <!-- Representación -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.2.1</span> Representación en memoria</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Con arreglo</h3>
+          <p>
+            Se usan índices <code>frente</code> y <code>final</code>.
+            Si no se reutiliza el espacio, el arreglo se “desgasta” hacia un lado
+            (por eso existen las <strong>colas circulares</strong>).
+          </p>
+        </div>
+        <div class="card">
+          <h3>Con nodos enlazados</h3>
+          <p>
+            Se mantienen punteros al frente y al final.
+            <code>enqueue</code> enlaza al final; <code>dequeue</code> avanza el frente.
+            Ambas operaciones en O(1).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Operaciones -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.2.2</span> Operaciones básicas</h2>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Operación</th>
+                <th>Descripción</th>
+                <th>Complejidad típica</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>enqueue(x)</code> / <code>put(x)</code></td>
+                <td>Inserta x al final</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td><code>dequeue()</code> / <code>get()</code></td>
+                <td>Elimina y retorna el frente</td>
+                <td><span class="badge badge-o1">O(1)</span>*</td>
+              </tr>
+              <tr>
+                <td><code>front()</code> / <code>peek()</code></td>
+                <td>Consulta el frente</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td><code>is_empty()</code></td>
+                <td>¿Vacía?</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td><code>size()</code></td>
+                <td>Número de elementos</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          * Con lista de Python, <code>pop(0)</code> es O(n); por eso se prefiere
+          <code>collections.deque</code> o una implementación con nodos / índices circulares.
+        </p>
+
+        <h4>Implementación con collections.deque (recomendada en Python)</h4>
+<pre><code>from collections import deque
+
+class Cola:
+    def __init__(self):
+        self._datos = deque()
+
+    def enqueue(self, x):
+        self._datos.append(x)
+
+    def dequeue(self):
+        if self.is_empty():
+            raise IndexError("Cola vacía")
+        return self._datos.popleft()
+
+    def front(self):
+        if self.is_empty():
+            raise IndexError("Cola vacía")
+        return self._datos[0]
+
+    def is_empty(self):
+        return len(self._datos) == 0
+
+    def size(self):
+        return len(self._datos)
+</code></pre>
+      </div>
+    </section>
+
+    <!-- Tipos de colas -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.2.3</span> Tipos de colas</h2>
+
+      <div class="card">
+        <h3>Cola simple</h3>
+        <p>FIFO clásica: un solo frente y un solo final. Las operaciones solo se realizan en esos extremos.</p>
+      </div>
+
+      <div class="card">
+        <h3>Cola circular</h3>
+        <p>
+          El arreglo se trata como circular: al llegar al final se vuelve al inicio.
+          Así se reutiliza el espacio liberado por los <code>dequeue</code>.
+        </p>
+<pre><code>class ColaCircular:
+    def __init__(self, capacidad):
+        self._datos = [None] * capacidad
+        self._cap = capacidad
+        self._frente = 0
+        self._final = 0
+        self._n = 0
+
+    def enqueue(self, x):
+        if self._n == self._cap:
+            raise OverflowError("Cola llena")
+        self._datos[self._final] = x
+        self._final = (self._final + 1) % self._cap
+        self._n += 1
+
+    def dequeue(self):
+        if self._n == 0:
+            raise IndexError("Cola vacía")
+        x = self._datos[self._frente]
+        self._frente = (self._frente + 1) % self._cap
+        self._n -= 1
+        return x
+
+    def is_empty(self):
+        return self._n == 0
+
+    def size(self):
+        return self._n
+</code></pre>
+        <div class="diagram">
+Índices: 0  1  2  3  4<br>
+Datos:  [ ][B][C][D][ ]   frente=1, final=4, n=3<br>
+<span style="opacity:0.6">Tras más operaciones el “hueco” se reutiliza</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Bicola (Deque — Double-Ended Queue)</h3>
+        <p>
+          Permite inserción y eliminación en <strong>ambos extremos</strong>.
+          Útil cuando se necesita flexibilidad de pila y cola a la vez.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Operación</th><th>Descripción</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>push_front(x)</code> / <code>push_back(x)</code></td><td>Insertar al frente o al final</td></tr>
+              <tr><td><code>pop_front()</code> / <code>pop_back()</code></td><td>Eliminar del frente o del final</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>En Python: <code>collections.deque</code> ya ofrece <code>appendleft</code>, <code>popleft</code>, <code>append</code>, <code>pop</code>.</p>
+      </div>
+
+      <div class="card">
+        <h3>Cola de prioridad</h3>
+        <p>
+          Cada elemento tiene una <strong>prioridad</strong>. Sale primero el de mayor
+          (o menor) prioridad, no necesariamente el que llegó antes.
+          Se implementa a menudo con <strong>heaps</strong> (montículos) → O(log n) por operación.
+        </p>
+<pre><code>import heapq
+
+class ColaPrioridad:
+    def __init__(self):
+        self._heap = []   # min-heap: menor número = mayor prioridad
+        self._contador = 0
+
+    def enqueue(self, item, prioridad):
+        # contador evita comparar items si hay empate de prioridad
+        heapq.heappush(self._heap, (prioridad, self._contador, item))
+        self._contador += 1
+
+    def dequeue(self):
+        if not self._heap:
+            raise IndexError("Cola vacía")
+        return heapq.heappop(self._heap)[2]
+
+    def is_empty(self):
+        return len(self._heap) == 0
+</code></pre>
+      </div>
+    </section>
+
+    <!-- Aplicaciones -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.2.4</span> Aplicaciones</h2>
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="icon">🖨️</div>
+          <h3>Colas de impresión / atención</h3>
+          <p>Documentos o clientes se atienden en el orden de llegada.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">✈️</div>
+          <h3>Simulación de aeropuertos</h3>
+          <p>Despegue/aterrizaje; con prioridad para emergencias.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🖥️</div>
+          <h3>Planificación de procesos</h3>
+          <p>CPU scheduling (Round-Robin usa cola circular).</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔍</div>
+          <h3>BFS en grafos</h3>
+          <p>Recorrido en anchura: se encolan los vecinos por niveles.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="callout success">
+      <strong>📝 Actividades del programa</strong>
+      Programar colas estáticas y dinámicas; simular lista de espera de mesas en un restaurante
+      y salida de aviones con colas de prioridad.
+    </div>
+
+    <div class="btn-group">
+      <a href="pilas.html" class="btn btn-outline">← 3.1 Pilas</a>
+      <a href="listas.html" class="btn btn-primary">Siguiente: 3.3 Listas →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div><strong>Estructura de Datos (AED-1026)</strong> · Tema 3.2</div>
+      <div>Material didáctico abierto</div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

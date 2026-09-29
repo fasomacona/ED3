@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.3 Listas | Tema 3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">ED</span>
+        Estructura de Datos
+      </a>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="pilas.html">3.1 Pilas</a>
+        <a href="colas.html">3.2 Colas</a>
+        <a href="listas.html" class="active">3.3 Listas</a>
+        <a href="practica.html">Práctica</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 2rem;">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a> › 3.3 Listas
+    </div>
+
+    <h1 class="section-title"><span class="num">3.3</span> Listas enlazadas</h1>
+
+    <div class="card">
+      <p>
+        Una <strong>lista enlazada</strong> es una estructura lineal dinámica formada por
+        <strong>nodos</strong>. Cada nodo contiene un dato y una o más referencias a otros nodos.
+        A diferencia de un arreglo, los elementos <strong>no tienen por qué estar contiguos</strong>
+        en memoria y el tamaño puede crecer o reducirse fácilmente.
+      </p>
+    </div>
+
+    <!-- Operaciones básicas -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.3.1</span> Operaciones básicas</h2>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Operación</th>
+                <th>Descripción</th>
+                <th>Simple (típica)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Insertar al inicio</td>
+                <td>Nuevo nodo como cabeza</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Insertar al final</td>
+                <td>Recorrer hasta el último (o usar puntero al final)</td>
+                <td><span class="badge badge-on">O(n)</span> / <span class="badge badge-o1">O(1)</span>*</td>
+              </tr>
+              <tr>
+                <td>Insertar en posición k</td>
+                <td>Avanzar k−1 nodos y reenlazar</td>
+                <td><span class="badge badge-on">O(n)</span></td>
+              </tr>
+              <tr>
+                <td>Eliminar al inicio</td>
+                <td>Avanzar la cabeza</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td>Eliminar un valor / posición</td>
+                <td>Buscar nodo anterior y reenlazar</td>
+                <td><span class="badge badge-on">O(n)</span></td>
+              </tr>
+              <tr>
+                <td>Buscar</td>
+                <td>Recorrer hasta encontrar el valor</td>
+                <td><span class="badge badge-on">O(n)</span></td>
+              </tr>
+              <tr>
+                <td>Recorrer / mostrar</td>
+                <td>Visitar todos los nodos</td>
+                <td><span class="badge badge-on">O(n)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">* O(1) si se mantiene un puntero al último nodo.</p>
+      </div>
+    </section>
+
+    <!-- Tipos -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.3.2</span> Tipos de listas</h2>
+
+      <!-- Simple -->
+      <div class="card">
+        <h3>Lista simplemente enlazada</h3>
+        <p>Cada nodo tiene un enlace al <strong>siguiente</strong>. Solo se recorre en un sentido.</p>
+        <div class="diagram">
+cabeza → [10|•] → [20|•] → [30|•] → None
+        </div>
+<pre><code>class Nodo:
+    def __init__(self, dato):
+        self.dato = dato
+        self.siguiente = None
+
+class ListaSimple:
+    def __init__(self):
+        self.cabeza = None
+
+    def insertar_inicio(self, dato):
+        nuevo = Nodo(dato)
+        nuevo.siguiente = self.cabeza
+        self.cabeza = nuevo
+
+    def insertar_final(self, dato):
+        nuevo = Nodo(dato)
+        if self.cabeza is None:
+            self.cabeza = nuevo
+            return
+        actual = self.cabeza
+        while actual.siguiente:
+            actual = actual.siguiente
+        actual.siguiente = nuevo
+
+    def eliminar(self, dato):
+        if self.cabeza is None:
+            return False
+        if self.cabeza.dato == dato:
+            self.cabeza = self.cabeza.siguiente
+            return True
+        actual = self.cabeza
+        while actual.siguiente and actual.siguiente.dato != dato:
+            actual = actual.siguiente
+        if actual.siguiente:
+            actual.siguiente = actual.siguiente.siguiente
+            return True
+        return False
+
+    def buscar(self, dato):
+        actual = self.cabeza
+        while actual:
+            if actual.dato == dato:
+                return True
+            actual = actual.siguiente
+        return False
+
+    def mostrar(self):
+        actual = self.cabeza
+        elems = []
+        while actual:
+            elems.append(str(actual.dato))
+            actual = actual.siguiente
+        return " → ".join(elems) + " → None"
+</code></pre>
+      </div>
+
+      <!-- Doble -->
+      <div class="card">
+        <h3>Lista doblemente enlazada</h3>
+        <p>
+          Cada nodo tiene enlaces al <strong>siguiente</strong> y al <strong>anterior</strong>.
+          Se puede recorrer en ambos sentidos. La eliminación es más sencilla si se tiene
+          referencia directa al nodo (no hace falta buscar el predecesor).
+        </p>
+        <div class="diagram">
+None ← [10|•|•] ⇄ [20|•|•] ⇄ [30|•|•] → None
+        </div>
+<pre><code>class NodoDoble:
+    def __init__(self, dato):
+        self.dato = dato
+        self.siguiente = None
+        self.anterior = None
+
+class ListaDoble:
+    def __init__(self):
+        self.cabeza = None
+        self.cola = None   # opcional, facilita insertar al final en O(1)
+
+    def insertar_inicio(self, dato):
+        nuevo = NodoDoble(dato)
+        if self.cabeza is None:
+            self.cabeza = self.cola = nuevo
+        else:
+            nuevo.siguiente = self.cabeza
+            self.cabeza.anterior = nuevo
+            self.cabeza = nuevo
+
+    def insertar_final(self, dato):
+        nuevo = NodoDoble(dato)
+        if self.cola is None:
+            self.cabeza = self.cola = nuevo
+        else:
+            self.cola.siguiente = nuevo
+            nuevo.anterior = self.cola
+            self.cola = nuevo
+
+    def eliminar(self, dato):
+        actual = self.cabeza
+        while actual and actual.dato != dato:
+            actual = actual.siguiente
+        if actual is None:
+            return False
+        if actual.anterior:
+            actual.anterior.siguiente = actual.siguiente
+        else:
+            self.cabeza = actual.siguiente
+        if actual.siguiente:
+            actual.siguiente.anterior = actual.anterior
+        else:
+            self.cola = actual.anterior
+        return True
+</code></pre>
+      </div>
+
+      <!-- Circular -->
+      <div class="card">
+        <h3>Lista circular</h3>
+        <p>
+          El último nodo apunta de nuevo al primero (en la simple) o se forma un anillo
+          (en la doble). No hay <code>None</code> de terminación; se detecta el fin
+          al volver a la cabeza.
+        </p>
+        <div class="diagram">
+cabeza → [A|•] → [B|•] → [C|•] ─┐<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑__________________┘
+        </div>
+        <p><strong>Aplicaciones:</strong> round-robin, playlists en bucle, buffers circulares.</p>
+<pre><code>class ListaCircular:
+    def __init__(self):
+        self.cabeza = None
+
+    def insertar_final(self, dato):
+        nuevo = Nodo(dato)
+        if self.cabeza is None:
+            self.cabeza = nuevo
+            nuevo.siguiente = nuevo  # apunta a sí mismo
+            return
+        actual = self.cabeza
+        while actual.siguiente != self.cabeza:
+            actual = actual.siguiente
+        actual.siguiente = nuevo
+        nuevo.siguiente = self.cabeza
+
+    def mostrar(self, max_vueltas=1):
+        if self.cabeza is None:
+            return "vacía"
+        elems = []
+        actual = self.cabeza
+        for _ in range(max_vueltas):
+            while True:
+                elems.append(str(actual.dato))
+                actual = actual.siguiente
+                if actual == self.cabeza:
+                    break
+        return " → ".join(elems) + " → (circular)"
+</code></pre>
+      </div>
+    </section>
+
+    <!-- Comparación -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">A</span> Comparación: arreglo vs lista enlazada</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Aspecto</th>
+              <th>Arreglo / vector</th>
+              <th>Lista enlazada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Acceso por índice</td>
+              <td><span class="badge badge-o1">O(1)</span></td>
+              <td><span class="badge badge-on">O(n)</span></td>
+            </tr>
+            <tr>
+              <td>Inserción al inicio</td>
+              <td><span class="badge badge-on">O(n)</span></td>
+              <td><span class="badge badge-o1">O(1)</span></td>
+            </tr>
+            <tr>
+              <td>Inserción al final</td>
+              <td><span class="badge badge-o1">O(1)</span>*</td>
+              <td><span class="badge badge-o1">O(1)</span>**</td>
+            </tr>
+            <tr>
+              <td>Memoria extra</td>
+              <td>Baja (bloque contiguo)</td>
+              <td>Alta (punteros por nodo)</td>
+            </tr>
+            <tr>
+              <td>Localidad de caché</td>
+              <td>Excelente</td>
+              <td>Pobre (nodos dispersos)</td>
+            </tr>
+            <tr>
+              <td>Tamaño</td>
+              <td>Fijo o redimensionable</td>
+              <td>Dinámico naturalmente</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        * Amortizado en vectores dinámicos. ** Con puntero al final.
+      </p>
+    </section>
+
+    <!-- Aplicaciones -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.3.3</span> Aplicaciones</h2>
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="icon">📋</div>
+          <h3>Listas de tareas / historiales</h3>
+          <p>Inserción y eliminación frecuente en posiciones variables.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🎵</div>
+          <h3>Playlists y buffers</h3>
+          <p>Listas circulares para reproducción en bucle.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🧩</div>
+          <h3>Base de otras estructuras</h3>
+          <p>Pilas, colas, grafos (listas de adyacencia), hash chaining.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">↩️</div>
+          <h3>Editores y navegación</h3>
+          <p>Listas dobles para avanzar/retroceder (undo-redo, pestañas).</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="callout success">
+      <strong>📝 Actividades del programa</strong>
+      Utilizar clases predefinidas y/o implementar listas enlazadas; aplicarlas en la
+      resolución de problemas y elaborar reportes de práctica.
+    </div>
+
+    <div class="btn-group">
+      <a href="colas.html" class="btn btn-outline">← 3.2 Colas</a>
+      <a href="practica.html" class="btn btn-primary">Ir a la práctica (Jupyter) →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div><strong>Estructura de Datos (AED-1026)</strong> · Tema 3.3</div>
+      <div>Material didáctico abierto</div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

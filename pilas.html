@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.1 Pilas | Tema 3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">ED</span>
+        Estructura de Datos
+      </a>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="pilas.html" class="active">3.1 Pilas</a>
+        <a href="colas.html">3.2 Colas</a>
+        <a href="listas.html">3.3 Listas</a>
+        <a href="practica.html">Práctica</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 2rem;">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a> › 3.1 Pilas
+    </div>
+
+    <h1 class="section-title"><span class="num">3.1</span> Pilas (Stacks)</h1>
+
+    <div class="card">
+      <p>
+        Una <strong>pila</strong> es una estructura lineal con disciplina <strong>LIFO</strong>
+        (Last In, First Out): el último elemento insertado es el primero en eliminarse.
+        Solo se opera en un extremo, llamado <strong>tope</strong> (top).
+      </p>
+      <div class="diagram" style="margin-top: 1rem;">
+        &nbsp;&nbsp;&nbsp;&nbsp;tope → [ 30 ] ← último en entrar<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ 20 ]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ 10 ] ← fondo<br>
+        <span style="opacity:0.6">push agrega arriba · pop quita de arriba</span>
+      </div>
+    </div>
+
+    <!-- Representación -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.1.1</span> Representación en memoria</h2>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Con arreglo (estática)</h3>
+          <p>Se reserva un arreglo de capacidad fija y un índice <code>tope</code>.</p>
+<pre><code># Pseudocódigo / idea
+capacidad = 100
+datos[capacidad]
+tope = -1   # pila vacía
+
+# push(x):  tope++; datos[tope] = x
+# pop():    x = datos[tope]; tope--; return x
+</code></pre>
+          <ul>
+            <li>Acceso O(1)</li>
+            <li>Riesgo de desbordamiento si se llena</li>
+            <li>No desperdicia punteros por elemento</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Con nodos (dinámica)</h3>
+          <p>Cada elemento es un nodo con dato y enlace al siguiente; el tope es la cabeza.</p>
+<pre><code>class Nodo:
+    def __init__(self, dato):
+        self.dato = dato
+        self.siguiente = None
+
+# tope apunta al nodo superior
+# push: nuevo.siguiente = tope; tope = nuevo
+# pop:  x = tope.dato; tope = tope.siguiente
+</code></pre>
+          <ul>
+            <li>Crece según necesidad</li>
+            <li>Sobrecarga de memoria por enlaces</li>
+            <li>Sin límite fijo (salvo memoria del sistema)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Operaciones -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.1.2</span> Operaciones básicas</h2>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Operación</th>
+                <th>Descripción</th>
+                <th>Precondición</th>
+                <th>Complejidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>push(x)</code></td>
+                <td>Inserta x en el tope</td>
+                <td>Pila no llena (versión estática)</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td><code>pop()</code></td>
+                <td>Elimina y retorna el tope</td>
+                <td>Pila no vacía</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td><code>top() / peek()</code></td>
+                <td>Consulta el tope sin eliminar</td>
+                <td>Pila no vacía</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td><code>is_empty()</code></td>
+                <td>¿No hay elementos?</td>
+                <td>—</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+              </tr>
+              <tr>
+                <td><code>size()</code></td>
+                <td>Número de elementos</td>
+                <td>—</td>
+                <td><span class="badge badge-o1">O(1)</span>*</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">* Si se mantiene un contador; si no, O(n) recorriendo nodos.</p>
+
+        <h4>Implementación con lista de Python (dinámica)</h4>
+<pre><code>class Pila:
+    def __init__(self):
+        self._datos = []
+
+    def push(self, x):
+        self._datos.append(x)
+
+    def pop(self):
+        if self.is_empty():
+            raise IndexError("Pila vacía")
+        return self._datos.pop()
+
+    def top(self):
+        if self.is_empty():
+            raise IndexError("Pila vacía")
+        return self._datos[-1]
+
+    def is_empty(self):
+        return len(self._datos) == 0
+
+    def size(self):
+        return len(self._datos)
+</code></pre>
+
+        <h4>Implementación estática (capacidad fija)</h4>
+<pre><code>class PilaEstatica:
+    def __init__(self, capacidad):
+        self._datos = [None] * capacidad
+        self._capacidad = capacidad
+        self._tope = -1
+
+    def push(self, x):
+        if self._tope + 1 >= self._capacidad:
+            raise OverflowError("Pila llena")
+        self._tope += 1
+        self._datos[self._tope] = x
+
+    def pop(self):
+        if self.is_empty():
+            raise IndexError("Pila vacía")
+        x = self._datos[self._tope]
+        self._tope -= 1
+        return x
+
+    def top(self):
+        if self.is_empty():
+            raise IndexError("Pila vacía")
+        return self._datos[self._tope]
+
+    def is_empty(self):
+        return self._tope == -1
+
+    def size(self):
+        return self._tope + 1
+</code></pre>
+      </div>
+    </section>
+
+    <!-- Aplicaciones -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3.1.3</span> Aplicaciones</h2>
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="icon">↩️</div>
+          <h3>Historial de navegador / Undo</h3>
+          <p>Cada página visitada (o acción) se apila; “atrás” o “deshacer” hace pop.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📞</div>
+          <h3>Pila de llamadas</h3>
+          <p>El sistema operativo apila marcos de activación al invocar funciones.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🧮</div>
+          <h3>Evaluación de expresiones</h3>
+          <p>Notación postfija / verificación de paréntesis balanceados.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🌳</div>
+          <h3>Recorridos DFS</h3>
+          <p>Profundidad en grafos y árboles (explícita o vía recursión).</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 1.25rem;">
+        <h3>Ejemplo: paréntesis balanceados</h3>
+<pre><code>def balanceados(expr):
+    pila = Pila()
+    pares = {')': '(', ']': '[', '}': '{'}
+    for c in expr:
+        if c in '([{':
+            pila.push(c)
+        elif c in ')]}':
+            if pila.is_empty() or pila.pop() != pares[c]:
+                return False
+    return pila.is_empty()
+</code></pre>
+      </div>
+    </section>
+
+    <div class="callout success">
+      <strong>📝 Actividades del programa</strong>
+      Programar las operaciones básicas de pilas de manera estática (arreglos) y dinámica;
+      simular llamadas a funciones y el historial de páginas de un navegador.
+    </div>
+
+    <div class="btn-group">
+      <a href="index.html" class="btn btn-outline">← Inicio</a>
+      <a href="colas.html" class="btn btn-primary">Siguiente: 3.2 Colas →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div><strong>Estructura de Datos (AED-1026)</strong> · Tema 3.1</div>
+      <div>Material didáctico abierto</div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>
